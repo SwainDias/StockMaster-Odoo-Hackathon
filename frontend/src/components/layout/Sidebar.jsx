@@ -1,5 +1,5 @@
 import { NavLink } from "@/components/NavLink";
-import { LayoutDashboard, Package, ClipboardList, History, Warehouse, MapPin, Settings, TruckIcon } from "lucide-react";
+import { LayoutDashboard, Package, ClipboardList, History, Warehouse, MapPin, Settings, TruckIcon, User} from "lucide-react";
 
 export const Navbar = () => {
   const navItems = [
@@ -8,6 +8,7 @@ export const Navbar = () => {
     { to: "/products", icon: Package, label: "Products" },
     { to: "/move-history", icon: History, label: "Move History" },
     { to: "/settings", icon: Settings, label: "Settings" },
+    { to: "/profile", icon: User, label: "Profile" },
   ];
 
   return (
