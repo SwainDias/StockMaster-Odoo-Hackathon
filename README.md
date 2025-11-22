@@ -143,8 +143,8 @@ Manage warehouses and storage locations:
 
 # 🏗️ Tech Stack (Modify according to your project)
 - **Frontend:** React / Tailwind / HTML / CSS / JS  
-- **Backend:** Python / Odoo / FastAPI / Django  
-- **Database:** PostgreSQL / MySQL  
+- **Backend:** Flask
+- **Database:** Sqlite 
 - **Version Control:** Git + GitHub  
 
 ---
