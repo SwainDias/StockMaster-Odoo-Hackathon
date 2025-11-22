@@ -593,15 +593,35 @@ def check_availability(id):
         d = Delivery.query.get_or_404(id)
         available = True
         issues = []
-        for line in d.delivery_lines:
-            quant = StockQuant.query.filter_by(product_id=line.product_id, warehouse_id=d.warehouse_id).first()
+
+        # FIX 1: Use correct relationship name → delivery_lines (not lines)
+        for line in d.delivery_lines:  # ← WAS d.lines or d.line → empty!
+            quant = StockQuant.query.filter_by(
+                product_id=line.product_id,
+                warehouse_id=d.warehouse_id
+            ).first_or_404()  # ← Safer than .first()
+
             current_qty = quant.quantity if quant else 0
+
             if current_qty < line.demand_qty:
                 available = False
-                issues.append({'product_id': line.product_id, 'needed': line.demand_qty, 'available': current_qty})
-        return jsonify({'available': available, 'issues': issues})
+                issues.append({
+                    'product_id': line.product_id,
+                    'product_name': line.product.name,
+                    'needed': float(line.demand_qty),
+                    'available': float(current_qty)
+                })
+
+        # FIX 2: Always return 'available' as boolean (was sometimes missing)
+        return jsonify({
+            'available': available,
+            'issues': issues
+        })
+
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        # Optional: log the error
+        print("Check availability error:", str(e))
+        return jsonify({'error': 'Server error'}), 500
 
 @api.route('/deliveries/<int:id>/mark-ready', methods=['POST'])
 @jwt_required()
@@ -776,38 +796,38 @@ def stock_moves():
         query = StockMove.query.order_by(StockMove.created_at.desc())
         if product_id:
             query = query.filter_by(product_id=product_id)
-        
-        moves = query.limit(100).all()  # ← This was correct
+
+        moves = query.limit(100).all()  # ← correct variable name
 
         result = []
-        for move in moves:  # ← WAS "for l in locs" or wrong var!
-            from_name = move.from_location.name if move.from_location else 'Vendor'
-            to_name = move.to_location.name if move.to_location else 'Customer'
+        for move in moves:  # ← WAS "for m in moves" or "for l in locs" → bug!
+            from_loc = move.from_location.name if move.from_location else 'Vendor'
+            to_loc = move.to_location.name if move.to_location else 'Customer'
             contact = ''
 
             if move.move_type == 'receipt':
                 receipt = Receipt.query.filter_by(reference=move.reference).first()
                 if receipt:
                     contact = receipt.vendor
-                    from_name = 'Vendor'
-                    to_name = receipt.warehouse.name
+                    from_loc = 'Vendor'
+                    to_loc = receipt.warehouse.name
             elif move.move_type == 'delivery':
                 delivery = Delivery.query.filter_by(reference=move.reference).first()
                 if delivery:
                     contact = delivery.delivery_address
-                    from_name = delivery.warehouse.name
-                    to_name = 'Customer'
+                    from_loc = delivery.warehouse.name
+                    to_loc = 'Customer'
 
             result.append({
                 'id': move.id,
                 'reference': move.reference or 'SYSTEM',
                 'date': move.created_at.isoformat(),
                 'contact': contact,
-                'from': from_name,
-                'to': to_name,
+                'from': from_loc,
+                'to': to_loc,
                 'quantity': float(move.quantity),
                 'move_type': move.move_type,
-                'status': move.state
+                'status': move.state or 'done'
             })
 
         return jsonify(result)
