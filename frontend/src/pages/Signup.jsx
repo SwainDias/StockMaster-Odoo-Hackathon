@@ -6,29 +6,28 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { TruckIcon } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { authAPI } from "@/lib/api";
 
 const Signup = () => {
   const navigate = useNavigate();
-  const [loginId, setLoginId] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rePassword, setRePassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const validateLoginId = (id) => {
-    return id.length >= 6 && id.length <= 12;
-  };
-
+  
   const validatePassword = (pwd) => {
     const hasLowerCase = /[a-z]/.test(pwd);
     const hasUpperCase = /[A-Z]/.test(pwd);
     const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(pwd);
     return pwd.length > 8 && hasLowerCase && hasUpperCase && hasSpecialChar;
   };
+  
 
-  const handleSignup = (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
 
-    if (!loginId || !email || !password || !rePassword) {
+    if (!email || !password || !rePassword) {
       toast({
         title: "Error",
         description: "Please fill in all fields",
@@ -37,15 +36,7 @@ const Signup = () => {
       return;
     }
 
-    if (!validateLoginId(loginId)) {
-      toast({
-        title: "Invalid Login ID",
-        description: "Login ID must be between 6-12 characters",
-        variant: "destructive",
-      });
-      return;
-    }
-
+    /*
     if (!validatePassword(password)) {
       toast({
         title: "Invalid Password",
@@ -54,6 +45,7 @@ const Signup = () => {
       });
       return;
     }
+    */
 
     if (password !== rePassword) {
       toast({
@@ -64,11 +56,23 @@ const Signup = () => {
       return;
     }
 
-    toast({
-      title: "Success",
-      description: "Account created successfully",
-    });
-    navigate("/");
+    setLoading(true);
+    try {
+      await authAPI.register(email, password, "staff");
+      toast({
+        title: "Success",
+        description: "Account created successfully. Please login.",
+      });
+      navigate("/");
+    } catch (error) {
+      toast({
+        title: "Signup Failed",
+        description: error.message || "Failed to create account. Email may already be registered.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -84,21 +88,11 @@ const Signup = () => {
         <form onSubmit={handleSignup}>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="loginId">Login ID</Label>
-              <Input
-                id="loginId"
-                placeholder="Enter Login ID (6-12 characters)"
-                value={loginId}
-                onChange={(e) => setLoginId(e.target.value)}
-                className="h-11"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="email">Email ID</Label>
+              <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="Enter Email ID"
+                placeholder="Enter Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="h-11"
@@ -127,14 +121,13 @@ const Signup = () => {
               />
             </div>
             <div className="text-xs text-muted-foreground space-y-1">
-              <p>• Login ID: 6-12 characters</p>
               <p>• Password: more than 8 characters</p>
               <p>• Must contain: lowercase, uppercase, and special character</p>
             </div>
           </CardContent>
           <CardFooter className="flex-col gap-3">
-            <Button type="submit" className="w-full h-11 text-base">
-              Sign Up
+            <Button type="submit" className="w-full h-11 text-base" disabled={loading}>
+              {loading ? "Signing Up..." : "Sign Up"}
             </Button>
             <button
               type="button"
