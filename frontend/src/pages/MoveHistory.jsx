@@ -17,7 +17,7 @@ const MoveHistory = () => {
       contact: "Azure Interior",
       from: "Vendor",
       to: "WH/Stock1",
-      quantity: 10,
+      onhand: 10,
       status: "Ready",
       type: "in",
     },
@@ -27,7 +27,7 @@ const MoveHistory = () => {
       contact: "Azure Interior",
       from: "WH/Stock1",
       to: "Vendor",
-      quantity: 5,
+      onhand: 5,
       status: "Ready",
       type: "out",
     },
@@ -37,7 +37,7 @@ const MoveHistory = () => {
       contact: "Azure Interior",
       from: "WH/Stock2",
       to: "Vendor",
-      quantity: 8,
+      onhand: 8,
       status: "Ready",
       type: "out",
     },
@@ -80,7 +80,7 @@ const MoveHistory = () => {
                   <TableHead>Contact</TableHead>
                   <TableHead>From</TableHead>
                   <TableHead>To</TableHead>
-                  <TableHead>Quantity</TableHead>
+                  <TableHead>on hand</TableHead>
                   <TableHead>Status</TableHead>
                 </TableRow>
               </TableHeader>
@@ -99,7 +99,7 @@ const MoveHistory = () => {
                     <TableCell>{move.contact}</TableCell>
                     <TableCell>{move.from}</TableCell>
                     <TableCell>{move.to}</TableCell>
-                    <TableCell>{move.quantity}</TableCell>
+                    <TableCell>{move.onhand}</TableCell>
                     <TableCell>
                       <Badge className={getStatusColor(move.status)}>{move.status}</Badge>
                     </TableCell>

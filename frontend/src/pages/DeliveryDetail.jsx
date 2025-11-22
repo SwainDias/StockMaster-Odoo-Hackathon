@@ -16,7 +16,7 @@ const DeliveryDetail = () => {
   const [status, setStatus] = useState("Draft");
 
   const products = [
-    { code: "DESK001", name: "Desk", quantity: 3, inStock: true },
+    { code: "DESK001", name: "Desk", onhand: 3, inStock: true },
   ];
 
   const getStatusColor = (status) => {
@@ -88,7 +88,7 @@ const DeliveryDetail = () => {
                 <TableHeader>
                   <TableRow>
                     <TableHead>Product</TableHead>
-                    <TableHead>Quantity</TableHead>
+                    <TableHead>on hand</TableHead>
                     <TableHead>Status</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -101,7 +101,7 @@ const DeliveryDetail = () => {
                       <TableCell>
                         [{product.code}] {product.name}
                       </TableCell>
-                      <TableCell>{product.quantity}</TableCell>
+                      <TableCell>{product.onhand}</TableCell>
                       <TableCell>
                         {product.inStock ? (
                           <Badge className="bg-success text-success-foreground">In Stock</Badge>

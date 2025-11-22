@@ -16,7 +16,7 @@ const ReceiptDetail = () => {
   const [status, setStatus] = useState("Draft");
 
   const products = [
-    { code: "DESK001", name: "Desk", quantity: 6 },
+    { code: "DESK001", name: "Desk", onhand: 6 },
   ];
 
   const handleValidate = () => {
@@ -96,7 +96,7 @@ const ReceiptDetail = () => {
                 <TableHeader>
                   <TableRow>
                     <TableHead>Product</TableHead>
-                    <TableHead>Quantity</TableHead>
+                    <TableHead>on hand</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -105,7 +105,7 @@ const ReceiptDetail = () => {
                       <TableCell>
                         [{product.code}] {product.name}
                       </TableCell>
-                      <TableCell>{product.quantity}</TableCell>
+                      <TableCell>{product.onhand}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
