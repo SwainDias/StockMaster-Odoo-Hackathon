@@ -5,9 +5,11 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Plus, Search } from "lucide-react";
+import { useNavigate } from "react-router-dom";  
 
 const Products = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate(); 
 
   const products = [
     { code: "DESK001", name: "Office Desk", perunitcost: "Furniture", onhand: 45, unit: "pcs" },
@@ -22,7 +24,7 @@ const Products = () => {
           title="Stock"
           action={{
             label: "New Product",
-            onClick: () => {},
+            onClick: () => navigate("/newproduct"),
             icon: <Plus className="h-4 w-4 " />,
           }}
         />

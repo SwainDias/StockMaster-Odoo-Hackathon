@@ -148,7 +148,7 @@ const ReceiptDetail = () => {
                   </Alert>
                 )}
                 
-                <Button variant="outline" className="w-full">
+                <Button variant="outline" className="w-full" onClick={() => navigate("/newproduct")}>
                   Add New product
                 </Button>
               </div>
