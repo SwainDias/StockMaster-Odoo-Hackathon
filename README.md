@@ -104,14 +104,6 @@ A complete log of all stock movements.
 - 🟩 IN (Incoming)  
 - 🟥 OUT (Outgoing)
 
-**Kanban View:**
-Group operations by status:
-- Draft  
-- Waiting  
-- Ready  
-- Done  
-- Cancelled  
-
 ---
 
 ## ⚙️ Settings
@@ -129,19 +121,7 @@ Manage warehouses and storage locations:
 
 ---
 
-# 🧭 Overall System Flow
-
-1. User logs in → arrives at Dashboard  
-2. User receives goods → stock increases  
-3. User transfers goods internally → location changes  
-4. User delivers goods → stock decreases  
-5. User performs stock adjustments → mismatches corrected  
-6. User tracks everything in Move History  
-7. User configures locations & warehouses in Settings  
-
----
-
-# 🏗️ Tech Stack (Modify according to your project)
+# 🏗️ Tech Stack 
 - **Frontend:** React / Tailwind / HTML / CSS / JS  
 - **Backend:** Flask
 - **Database:** Sqlite 
@@ -159,10 +139,10 @@ git clone <repo-url>
 cd StockMaster
 
 # Install dependencies
-<installation commands>
+npm install
 
 # Start the application
-<run command>
+npm run dev
 ```
 
 ## 🤝 Team Members
