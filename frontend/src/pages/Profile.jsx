@@ -5,10 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 
 const Profile = () => {
-  // local state for the editable form
   const [profile, setProfile] = useState({
     name: "Ravi Singh",
     role: "Warehouse Admin",
@@ -22,17 +20,14 @@ const Profile = () => {
   };
 
   const handleSave = () => {
-    // wire up API call / mutation here
-    console.log("Save profile", profile);
+    console.log("Save profile:", profile);
   };
 
-  // helper: compute initials for avatar fallback
-  const initials = profile.name
-    .split(" ")
-    .map((s) => s[0])
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
+  const handleLogout = () => {
+    // You can add your logout logic: clearing tokens, navigating to login, etc.
+    localStorage.clear();
+    window.location.href = "/";
+  };
 
   return (
     <DashboardLayout>
@@ -40,75 +35,71 @@ const Profile = () => {
         <PageHeader title="Profile" />
 
         <div className="mt-6 grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Left: compact profile summary */}
+          
+          {/* Left profile summary */}
           <aside className="lg:col-span-4">
             <Card className="rounded-2xl shadow-md overflow-hidden">
               <CardContent className="p-6">
                 <div className="flex flex-col items-center text-center">
-                  {/* Avatar fallback: initials inside a colored circle */}
-                  <div
-                    className="flex items-center justify-center rounded-full w-28 h-28 mb-4 text-white text-2xl font-semibold"
-                    style={{ background: "#2F6DF6" }}
-                  >
-                    {initials}
+
+                  {/* Avatar Circle */}
+                  <div className="w-28 h-28 rounded-full overflow-hidden bg-muted flex items-center justify-center mb-4">
+                    <img
+                      src={`https://ui-avatars.com/api/?name=${encodeURIComponent(
+                        profile.name
+                      )}&background=2F6DF6&color=fff`}
+                      alt="avatar"
+                      className="w-full h-full object-cover"
+                    />
                   </div>
 
-                  <h3 className="text-xl font-semibold text-foreground">{profile.name}</h3>
-                  <p className="text-sm text-muted-foreground mt-1">{profile.role}</p>
+                  <h3 className="text-xl font-semibold">{profile.name}</h3>
+                  <p className="text-sm text-muted-foreground">{profile.role}</p>
 
                   <div className="mt-4 w-full space-y-3">
-                    <div className="flex items-center justify-between px-4 py-2 bg-muted/50 rounded-lg">
-                      <div>
-                        <div className="text-xs text-muted-foreground">Email</div>
-                        <div className="text-sm font-medium">{profile.email}</div>
-                      </div>
+
+                    {/* Email */}
+                    <div className="px-4 py-2 bg-muted/50 rounded-lg text-left">
+                      <div className="text-xs text-muted-foreground">Email</div>
+                      <div className="text-sm font-medium">{profile.email}</div>
                     </div>
 
-                    <div className="flex items-center justify-between px-4 py-2 bg-muted/50 rounded-lg">
-                      <div>
-                        <div className="text-xs text-muted-foreground">Phone</div>
-                        <div className="text-sm font-medium">{profile.phone}</div>
-                      </div>
+                    {/* Phone */}
+                    <div className="px-4 py-2 bg-muted/50 rounded-lg text-left">
+                      <div className="text-xs text-muted-foreground">Phone</div>
+                      <div className="text-sm font-medium">{profile.phone}</div>
                     </div>
 
-                    <div className="flex items-center justify-between px-4 py-2 bg-muted/50 rounded-lg">
-                      <div>
-                        <div className="text-xs text-muted-foreground">Joined</div>
-                        <div className="text-sm font-medium">{profile.joined}</div>
-                      </div>
-                      <Badge className="bg-primary text-primary-foreground">Active</Badge>
+                    {/* Joined */}
+                    <div className="px-4 py-2 bg-muted/50 rounded-lg text-left">
+                      <div className="text-xs text-muted-foreground">Joined</div>
+                      <div className="text-sm font-medium">{profile.joined}</div>
                     </div>
 
-                    <div className="pt-2">
-                      <Button
-                        className="w-full"
-                        onClick={() => {
-                          // scroll to the editable form (right side)
-                          const y = document.querySelector("main")?.getBoundingClientRect().top ?? 0;
-                          window.scrollTo({ top: window.scrollY + y - 20, behavior: "smooth" });
-                        }}
-                      >
-                        Edit Profile
-                      </Button>
-                    </div>
+                    {/* Edit Button */}
+                    <Button
+                      className="w-full mt-2"
+                      onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                    >
+                      Edit Profile
+                    </Button>
+
+                    {/* Logout Button */}
+                    <Button
+                      variant="outline"
+                      className="w-full mt-2 border-red-500 text-red-600 hover:bg-red-50"
+                      onClick={handleLogout}
+                    >
+                      Logout
+                    </Button>
+
                   </div>
                 </div>
               </CardContent>
             </Card>
-
-            {/* small utilities card */}
-            <Card className="mt-6 rounded-2xl shadow-sm">
-              <CardContent className="p-4">
-                <h4 className="text-sm font-semibold">Quick Info</h4>
-                <p className="mt-2 text-xs text-muted-foreground">
-                  Use this page to update your display name, contact details and role. Changes will reflect across
-                  the application.
-                </p>
-              </CardContent>
-            </Card>
           </aside>
 
-          {/* Right: editable profile form */}
+          {/* Right editable form */}
           <main className="lg:col-span-8">
             <Card className="rounded-2xl shadow-lg">
               <CardHeader className="p-6">
@@ -117,35 +108,32 @@ const Profile = () => {
 
               <CardContent className="p-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
                   <div className="space-y-2">
-                    <Label htmlFor="name">Full name</Label>
-                    <Input id="name" value={profile.name} onChange={handleChange("name")} />
+                    <Label>Full Name</Label>
+                    <Input value={profile.name} onChange={handleChange("name")} />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="role">Role</Label>
-                    <Input id="role" value={profile.role} onChange={handleChange("role")} />
+                    <Label>Role</Label>
+                    <Input value={profile.role} onChange={handleChange("role")} />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input id="email" value={profile.email} onChange={handleChange("email")} />
+                    <Label>Email</Label>
+                    <Input value={profile.email} onChange={handleChange("email")} />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="phone">Phone</Label>
-                    <Input id="phone" value={profile.phone} onChange={handleChange("phone")} />
+                    <Label>Phone</Label>
+                    <Input value={profile.phone} onChange={handleChange("phone")} />
                   </div>
 
                   <div className="space-y-2 md:col-span-2">
-                    <Label htmlFor="joined">Joined Date</Label>
-                    <Input id="joined" value={profile.joined} onChange={handleChange("joined")} type="date" />
+                    <Label>Joined Date</Label>
+                    <Input type="date" value={profile.joined} onChange={handleChange("joined")} />
                   </div>
 
-                  <div className="space-y-2 md:col-span-2">
-                    <Label htmlFor="bio">Short Bio</Label>
-                    <Input id="bio" placeholder="Write a short bio (optional)" />
-                  </div>
                 </div>
 
                 <div className="mt-6 flex items-center gap-3">
@@ -159,6 +147,7 @@ const Profile = () => {
               </CardContent>
             </Card>
           </main>
+
         </div>
       </div>
     </DashboardLayout>
